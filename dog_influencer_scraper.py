@@ -8,11 +8,19 @@ import json
 import time
 import random
 import requests
+import csv
 from typing import List, Dict, Optional
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from tqdm import tqdm
 import logging
+from datetime import datetime
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
 
 # Configure logging
 logging.basicConfig(
@@ -223,6 +231,177 @@ class DogInfluencerScraper:
 
         logger.info(f"Results saved to {filename}")
 
+    def save_to_csv(self, filename: str = "dog_influencers_by_state.csv"):
+        """
+        Save results to CSV file.
+
+        Args:
+            filename: Output filename
+        """
+        with open(filename, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+
+            # Write header
+            writer.writerow([
+                'State/Territory', 'Rank', 'Dog Name', 'Handle', 'Platform',
+                'Followers', 'Engagement Rate (%)', 'Verified', 'URL', 'Bio'
+            ])
+
+            # Write data
+            for location in sorted(self.results.keys()):
+                influencers = self.results[location]
+                for rank, inf in enumerate(influencers, 1):
+                    writer.writerow([
+                        location,
+                        rank,
+                        inf.get('name', ''),
+                        inf.get('handle', ''),
+                        inf.get('platform', ''),
+                        inf.get('followers', 0),
+                        inf.get('engagement_rate', 0),
+                        'Yes' if inf.get('verified', False) else 'No',
+                        inf.get('url', ''),
+                        inf.get('bio', '')
+                    ])
+
+        logger.info(f"CSV saved to {filename}")
+
+    def save_to_pdf(self, filename: str = "dog_influencers_report.pdf"):
+        """
+        Generate a comprehensive PDF report.
+
+        Args:
+            filename: Output filename
+        """
+        doc = SimpleDocTemplate(filename, pagesize=letter)
+        story = []
+        styles = getSampleStyleSheet()
+
+        # Custom styles
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#2C3E50'),
+            spaceAfter=30,
+            alignment=TA_CENTER
+        )
+
+        heading_style = ParagraphStyle(
+            'CustomHeading',
+            parent=styles['Heading2'],
+            fontSize=16,
+            textColor=colors.HexColor('#34495E'),
+            spaceAfter=12
+        )
+
+        # Title
+        title = Paragraph("Dog Influencer Report", title_style)
+        story.append(title)
+
+        subtitle = Paragraph(
+            f"Top 5 Dog Influencers by US State & Territory<br/>Generated: {datetime.now().strftime('%B %d, %Y')}",
+            styles['Normal']
+        )
+        story.append(subtitle)
+        story.append(Spacer(1, 0.3*inch))
+
+        # Summary section
+        summary = self.generate_summary()
+        story.append(Paragraph("Executive Summary", heading_style))
+
+        summary_data = [
+            ['Metric', 'Value'],
+            ['Total Locations Analyzed', str(summary['total_locations'])],
+            ['Total Influencers Found', str(summary['total_influencers'])],
+            ['Average Followers', f"{summary['average_followers']:,.0f}"],
+            ['Average Engagement Rate', f"{summary['average_engagement']:.2f}%"]
+        ]
+
+        summary_table = Table(summary_data, colWidths=[3*inch, 2*inch])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3498DB')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+
+        story.append(summary_table)
+        story.append(Spacer(1, 0.3*inch))
+
+        # Platform distribution
+        story.append(Paragraph("Platform Distribution", heading_style))
+        platform_data = [['Platform', 'Count']]
+        for platform, count in summary['platform_distribution'].items():
+            platform_data.append([platform, str(count)])
+
+        platform_table = Table(platform_data, colWidths=[3*inch, 2*inch])
+        platform_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E74C3C')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 12),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black)
+        ]))
+
+        story.append(platform_table)
+        story.append(PageBreak())
+
+        # Detailed results by state
+        story.append(Paragraph("Detailed Results by State/Territory", heading_style))
+        story.append(Spacer(1, 0.2*inch))
+
+        for location in sorted(self.results.keys()):
+            influencers = self.results[location]
+
+            # State header
+            state_header = Paragraph(f"<b>{location}</b>", styles['Heading3'])
+            story.append(state_header)
+
+            # Create table for this state's influencers
+            state_data = [['Rank', 'Name', 'Platform', 'Followers', 'Engagement']]
+
+            for rank, inf in enumerate(influencers, 1):
+                state_data.append([
+                    str(rank),
+                    inf.get('name', '')[:30],
+                    inf.get('platform', ''),
+                    f"{inf.get('followers', 0):,}",
+                    f"{inf.get('engagement_rate', 0):.1f}%"
+                ])
+
+            state_table = Table(state_data, colWidths=[0.5*inch, 2.5*inch, 1*inch, 1.2*inch, 1*inch])
+            state_table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#95A5A6')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+                ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+                ('FONTSIZE', (0, 1), (-1, -1), 8)
+            ]))
+
+            story.append(state_table)
+            story.append(Spacer(1, 0.15*inch))
+
+            # Add page break every 8 states for readability
+            state_index = list(self.results.keys()).index(location)
+            if (state_index + 1) % 8 == 0 and state_index < len(self.results) - 1:
+                story.append(PageBreak())
+
+        # Build PDF
+        doc.build(story)
+        logger.info(f"PDF report saved to {filename}")
+
     def generate_summary(self) -> Dict:
         """
         Generate summary statistics.
@@ -268,8 +447,11 @@ def main():
     print(f"\nScraping {len(scraper.US_STATES_TERRITORIES)} locations...")
     results = scraper.scrape_all_locations()
 
-    # Save results
+    # Save results in multiple formats
+    print("\nGenerating output files...")
     scraper.save_results()
+    scraper.save_to_csv()
+    scraper.save_to_pdf()
 
     # Generate and display summary
     summary = scraper.generate_summary()
@@ -284,7 +466,10 @@ def main():
         print(f"  {platform}: {count}")
     print(f"\nAverage Followers: {summary['average_followers']:,.0f}")
     print(f"Average Engagement Rate: {summary['average_engagement']:.2f}%")
-    print(f"\nResults saved to: dog_influencers_by_state.json")
+    print(f"\nOutput Files Generated:")
+    print(f"  - dog_influencers_by_state.json")
+    print(f"  - dog_influencers_by_state.csv")
+    print(f"  - dog_influencers_report.pdf")
 
     # Show sample results
     print("\n" + "=" * 60)
