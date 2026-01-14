@@ -14,6 +14,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Los Angeles, CA",
             "breed": "Pomeranian",
             "bio": "Most-followed dog on Instagram, featured in Katy Perry music video",
+            "profile_url": "https://www.instagram.com/jiffpom/",
             "source_url": "https://influencers.feedspot.com/dog_instagram_influencers/",
             "engagement_rate": 3.5,
             "verified": True
@@ -26,6 +27,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Los Angeles, CA",
             "breed": "Mixed (Shih Tzu/Poodle/Pomeranian/Maltese/Chihuahua/Rat Terrier)",
             "bio": "Former stray LA pup, currently retired but still loves to travel and dine at pet-friendly restaurants",
+            "profile_url": "https://www.instagram.com/popeyethefoodie/",
             "source_url": "https://www.womansday.com/life/pet-care/a56752/rescue-dog-restaurants/",
             "engagement_rate": 4.2,
             "verified": False
@@ -53,6 +55,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Nashville, TN",
             "breed": "Pug",
             "bio": "2x People's Choice Winner & NYT Bestseller. May 20 is Doug the Pug Day in Nashville",
+            "profile_url": "https://www.instagram.com/itsdougthepug/",
             "source_url": "https://en.wikipedia.org/wiki/Doug_the_Pug",
             "engagement_rate": 2.8,
             "verified": True
@@ -68,6 +71,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Michigan",
             "breed": "Golden Retriever",
             "bio": "Seven-figure influencer with hilarious voiced-over videos, earns millions per year",
+            "profile_url": "https://www.instagram.com/tuckerbudzyn/",
             "source_url": "https://banana1015.com/michigan-is-home-to-the-worlds-top-dog-influencer/",
             "engagement_rate": 6.5,
             "verified": True
@@ -83,6 +87,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "New York City, NY",
             "breed": "Corgi",
             "bio": "NYC subway commuter in a backpack, inspired Little Chonk pet carrier company",
+            "profile_url": "https://www.instagram.com/madmax_fluffyroad/",
             "source_url": "https://www.boredpanda.com/corgi-maxine-subway-nyx-bryan-reisberg/",
             "engagement_rate": 4.8,
             "verified": False
@@ -110,6 +115,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Chicago, IL",
             "breed": "French Bulldog",
             "bio": "World's Most Followed Bulldog, author of Manny the Frenchie's Art of Happiness",
+            "profile_url": "https://www.instagram.com/manny_the_frenchie/",
             "source_url": "https://influencers.feedspot.com/chicago_dog_instagram_influencers/",
             "engagement_rate": 3.2,
             "verified": True
@@ -137,6 +143,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Denver, CO",
             "breed": "Wolf-Husky Mix",
             "bio": "Kelly Lund quit his Denver job when Loki's Instagram garnered endorsement deals from REI and Mercedes-Benz",
+            "profile_url": "https://www.instagram.com/loki/",
             "source_url": "https://5280.com/at-home-with-4-local-animal-instagram-stars/",
             "engagement_rate": 5.2,
             "verified": True
@@ -149,6 +156,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Denver, CO",
             "breed": "Wolf-Husky Mix",
             "bio": "Colorado-based adventure dog",
+            "profile_url": "https://www.instagram.com/henrythecoloradodog/",
             "source_url": "https://www.westword.com/arts/denver-dog-guide-instagram-pet-friendly-places-24598799",
             "engagement_rate": 4.9,
             "verified": True
@@ -203,6 +211,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Portland, OR",
             "breed": "Corgi",
             "bio": "Portland corgi taking the city by storm",
+            "profile_url": "https://www.instagram.com/mochthecorgi/",
             "source_url": "https://portlanddogtrainer.netlify.app/blog/portland-oregon-dog-instagram-influencers/",
             "engagement_rate": 5.3,
             "verified": False
@@ -290,6 +299,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Charleston, SC",
             "breed": "French Bulldog",
             "bio": "Famous in his own right, owned by Shep Rose of Bravo's Southern Charm",
+            "profile_url": "https://www.instagram.com/goodboycraig/",
             "source_url": "https://charlestonmag.com/going_to_the_dogs_top_dogs_of_instagram",
             "engagement_rate": 4.3,
             "verified": True
@@ -302,6 +312,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Charleston, SC",
             "breed": "Aussiedoodle",
             "bio": "Author of Meeko Goes to the Beach, product endorsements",
+            "profile_url": "https://www.instagram.com/ruff_life_of_meeko/",
             "source_url": "https://charlestonmag.com/going_to_the_dogs_top_dogs_of_instagram",
             "engagement_rate": 6.9,
             "verified": False
@@ -314,6 +325,7 @@ REAL_DOG_INFLUENCERS = {
             "location": "Charleston, SC",
             "breed": "Cavalier King Charles Spaniel",
             "bio": "Rose to Insta fame in 2018 after split screen with Snoop Dogg sporting similar hairdos, rapper reposted",
+            "profile_url": "https://www.instagram.com/teddythecavalier/",
             "source_url": "https://charlestonmag.com/going_to_the_dogs_top_dogs_of_instagram",
             "engagement_rate": 5.1,
             "verified": False

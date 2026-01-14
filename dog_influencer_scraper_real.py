@@ -74,7 +74,7 @@ class RealDogInfluencerReporter:
             writer.writerow([
                 'State/Territory', 'Name', 'Handle', 'Platform', 'Followers',
                 'Location', 'Breed', 'Engagement Rate (%)', 'Verified',
-                'Bio', 'Source URL'
+                'Profile URL', 'Bio', 'Source URL'
             ])
 
             # Write data sorted by state
@@ -91,6 +91,7 @@ class RealDogInfluencerReporter:
                         inf.get('breed', ''),
                         inf.get('engagement_rate', 0),
                         'Yes' if inf.get('verified', False) else 'No',
+                        inf.get('profile_url', 'N/A'),
                         inf.get('bio', ''),
                         inf.get('source_url', '')
                     ])
