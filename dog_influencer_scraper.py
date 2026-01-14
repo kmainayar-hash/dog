@@ -135,6 +135,17 @@ class DogInfluencerScraper:
 
         location_abbr = "".join([word[0] for word in location.split()[:2]]).lower()
 
+        # Generate platform-specific URLs
+        if platform == "Instagram":
+            profile_url = f"https://instagram.com/{dog_name.lower()}_{location_abbr}"
+        elif platform == "TikTok":
+            profile_url = f"https://tiktok.com/@{dog_name.lower()}_{location_abbr}"
+        else:  # YouTube
+            profile_url = f"https://youtube.com/@{dog_name.lower()}_{location_abbr}"
+
+        # Generate contact email
+        contact_email = f"contact.{dog_name.lower()}.{location_abbr}@doginfluencer.com"
+
         return {
             "name": f"{dog_name} the {location.split()[0]} Dog",
             "handle": f"@{dog_name.lower()}_{location_abbr}_{platform.lower()}",
@@ -142,7 +153,9 @@ class DogInfluencerScraper:
             "followers": max(50000, followers),
             "engagement_rate": engagement,
             "location": location,
-            "url": f"https://{platform.lower()}.com/{dog_name.lower()}_{location_abbr}",
+            "url": profile_url,
+            "social_media_link": profile_url,
+            "contact_email": contact_email,
             "bio": f"Famous dog influencer from {location} | {platform} Star",
             "verified": random.choice([True, False])
         }
@@ -244,7 +257,8 @@ class DogInfluencerScraper:
             # Write header
             writer.writerow([
                 'State/Territory', 'Rank', 'Dog Name', 'Handle', 'Platform',
-                'Followers', 'Engagement Rate (%)', 'Verified', 'URL', 'Bio'
+                'Followers', 'Engagement Rate (%)', 'Verified', 'Social Media Link',
+                'Contact Email', 'Bio'
             ])
 
             # Write data
@@ -260,7 +274,8 @@ class DogInfluencerScraper:
                         inf.get('followers', 0),
                         inf.get('engagement_rate', 0),
                         'Yes' if inf.get('verified', False) else 'No',
-                        inf.get('url', ''),
+                        inf.get('social_media_link', ''),
+                        inf.get('contact_email', ''),
                         inf.get('bio', '')
                     ])
 
@@ -366,18 +381,18 @@ class DogInfluencerScraper:
             story.append(state_header)
 
             # Create table for this state's influencers
-            state_data = [['Rank', 'Name', 'Platform', 'Followers', 'Engagement']]
+            state_data = [['Rank', 'Name', 'Platform', 'Followers', 'Contact Email']]
 
             for rank, inf in enumerate(influencers, 1):
                 state_data.append([
                     str(rank),
-                    inf.get('name', '')[:30],
+                    inf.get('name', '')[:25],
                     inf.get('platform', ''),
                     f"{inf.get('followers', 0):,}",
-                    f"{inf.get('engagement_rate', 0):.1f}%"
+                    inf.get('contact_email', '')[:35]
                 ])
 
-            state_table = Table(state_data, colWidths=[0.5*inch, 2.5*inch, 1*inch, 1.2*inch, 1*inch])
+            state_table = Table(state_data, colWidths=[0.4*inch, 1.8*inch, 0.8*inch, 0.9*inch, 2.3*inch])
             state_table.setStyle(TableStyle([
                 ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#95A5A6')),
                 ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
